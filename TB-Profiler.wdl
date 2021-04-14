@@ -3,14 +3,16 @@ version 1.0
 workflow TB_Profiler {
 
   input {
-    String    read1
-    String    read2
+    String  sample
+    File    read1
+    File    read2
   }
 
   call tb_profiler {
     input:
+      sample= sample_id,
       read1= read1,
-      read2= read2,
+      read2= read2
   }
 
   output {
@@ -19,11 +21,12 @@ workflow TB_Profiler {
   }
 }
 
-task fetch_bs {
+task tb-profiler {
 
   input {
     String    read1
     String    read2
+    String    sample
   }
 
   command <<<
