@@ -35,10 +35,7 @@ task fetch_bs {
 
   command <<<
 
-    bs --api-server=~{api} --access-token=~{token} download dataset -n ~{dataset}_L001 -o .
-    bs --api-server=~{api} --access-token=~{token} download dataset -n ~{dataset}_L002 -o .
-    bs --api-server=~{api} --access-token=~{token} download dataset -n ~{dataset}_L003 -o .
-    bs --api-server=~{api} --access-token=~{token} download dataset -n ~{dataset}_L004 -o .
+    bs --api-server=~{api} --access-token=~{token} download dataset -n ~{dataset} -o .
 
     for file in `ls *_R1_*`; do cat $file >> ~{sample}_R1.fastq.gz; done
     for file in `ls *_R2_*`; do cat $file >> ~{sample}_R2.fastq.gz; done
