@@ -24,14 +24,18 @@ FastqFileNames2 <-
   )
 
 number_samples = length(na.exclude(R1_list))
-barcodes = toupper(head(FastqFileNames2$X1, number_samples-1))
+barcodes = toupper(head(FastqFileNames2$X1, number_samples - 1))
 
-a = cbind(barcodes,
-          head(na.exclude(R1_list), number_samples-1),
-          head(na.exclude(R2_list), number_samples-1))
+rundate = readline(prompt = "Insert date of run in format YYYY-MM-DD: ")
+a = cbind(
+  barcodes,
+  head(na.exclude(R1_list), number_samples - 1),
+  head(na.exclude(R2_list), number_samples - 1),
+  rundate
+)
 
-colnames(a) = c("entity:sample_id", "read1", "read2")
+colnames(a) = c("entity:sample_id", "read1", "read2", "Date_of_run")
 a[number_samples - 2, 1] = "NTCA"
 a[number_samples - 1, 1] = "NTCB"
 
-write.csv(a, "upload_sheet.csv", row.names = F)
+write_tsv(as.data.frame(a), "upload_sheet.tsv", quote_escape = F, eol = "\n")
