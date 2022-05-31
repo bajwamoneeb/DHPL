@@ -1,0 +1,7 @@
+version: 1.2
+workflows:
+ - name: TB-Profiler_paired-reads
+   subclass: WDL
+   primaryDescriptorPath: /TB-Profiler__paired-reads.1.wdl
+   testParameterFiles:
+    - empty.json
