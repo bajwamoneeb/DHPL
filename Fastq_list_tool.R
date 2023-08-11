@@ -1,16 +1,11 @@
 library(readr)
 library(stringr)
-
-#Grab FASTQ file names
-Path_to_files = readline(prompt = "Enter path to FASTQ files: ")
-write(list.files(path =
-                   Path_to_files),
-      "FastqFileNames.txt")
+library(lubridate)
 
 FastqFileNames1 <- read_csv("FastqFileNames.txt", col_names = FALSE)
 
-R1_list = str_extract(as.matrix(FastqFileNames1), pattern = "\\w.*L001_R1_001.fastq.gz")
-R2_list = str_extract(as.matrix(FastqFileNames1), pattern = "\\w.*L001_R2_001.fastq.gz")
+R1_list = str_extract(as.matrix(FastqFileNames1), pattern = "\\w.*_R1_001.fastq.gz")
+R2_list = str_extract(as.matrix(FastqFileNames1), pattern = "\\w.*_R2_001.fastq.gz")
 write(na.exclude(R1_list), "R1_list.txt")
 
 #Grab barcodes
@@ -23,19 +18,43 @@ FastqFileNames2 <-
     col_names = F
   )
 
-number_samples = length(na.exclude(R1_list))
-barcodes = toupper(head(FastqFileNames2$X1, number_samples - 1))
+barcodes = toupper(FastqFileNames2$X1)
 
-rundate = readline(prompt = "Insert date of run in format YYYY-MM-DD: ")
+experiment_name = str_split_fixed(FastqFileNames1$X1, pattern = "_", n = 2)
+x = experiment_name[1]
+experiment_name_split = as.data.frame(str_split_fixed(x, pattern = "-", n = Inf))
+date=paste(experiment_name_split$V6,experiment_name_split$V5,experiment_name_split$V4,sep = "-")
+
+
+Run = experiment_name_split$V7
+rundate = ydm(date)
+instrument_model= " "
+seq_platform="ILLUMINA"
+
+# if(experiment_name_split$V3== "NB552483"){
+#   instrument_model="NextSeq 550"
+# } else{
+#   instrument_model="Illumina MiSeq"
+# }
+
 a = cbind(
   barcodes,
-  head(na.exclude(R1_list), number_samples - 1),
-  head(na.exclude(R2_list), number_samples - 1),
-  rundate
+  na.exclude(R1_list),
+  na.exclude(R2_list),
+  as.character(rundate),
+  instrument_model,
+  seq_platform
 )
 
-colnames(a) = c("entity:sample_id", "read1", "read2", "Date_of_run")
-a[number_samples - 2, 1] = "NTCA"
-a[number_samples - 1, 1] = "NTCB"
+colnames(a) = c(
+  "entity:sample_id",
+  "read1",
+  "read2",
+  "Date_of_run",
+  "instrument_model",
+  "seq_platform"
+)
 
-write_tsv(as.data.frame(a), "upload_sheet.tsv", quote_escape = F, eol = "\n")
+write_tsv(as.data.frame(a),
+          "upload_sheet.tsv",
+          eol = "\n")
