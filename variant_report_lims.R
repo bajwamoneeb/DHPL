@@ -3,6 +3,7 @@ library(readr)
 library(stringr)
 library(dplyr)
 library(data.table)
+library(writexl)
 
 report<-fread("variant_report_raw_new.csv")
 coverage=report %>% filter(Name=="Percent Reference Coverage")
@@ -28,7 +29,7 @@ z3=z2[order(as.numeric(z2$`Percent Reference Coverage`), decreasing = T), ]
 #date=z3$`Date Completed`
 #date1=sort(date)[1]
 
-old_report=read_tsv("Variant_report.2023-07-13.tsv", col_names = colnames(z3))
+old_report=read_tsv("Variant_report.2024-05-17.tsv", col_names = colnames(z3))
 #appended=rbind(old_report, z3)
 #appended1=unique(appended)
 #appended2=appended1 %>% filter(`Date Completed`>= as.Date(date1))
@@ -36,8 +37,8 @@ new_report = anti_join(z3, old_report, by = "Label Id")
 CCMC_report = new_report %>% filter(Customer == "CCMC")
 
 report_title=paste("Variant_report", Sys.Date(),"tsv", sep = ".")
-CCMCreport_title=paste("CCMC_report", Sys.Date(),"tsv", sep = ".")
+CCMCreport_title=paste("I:/dph_lab_Sequencing/COVID-19/Variant Summaries for Epi/CCMC_report", Sys.Date(),"xlsx", sep = ".")
 
 write_tsv(new_report, report_title)
-write_tsv(CCMC_report, CCMCreport_title)
+write_xlsx(CCMC_report, CCMCreport_title)
 View(CCMC_report)

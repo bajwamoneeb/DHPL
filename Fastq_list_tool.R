@@ -12,7 +12,7 @@ write(na.exclude(R1_list), "R1_list.txt")
 FastqFileNames2 <-
   read_delim(
     "R1_list.txt",
-    "-",
+    "_",
     escape_double = FALSE,
     trim_ws = TRUE,
     col_names = F

@@ -26,6 +26,7 @@ write(experiment_name, "experiment_name.txt")
 x = read_delim("experiment_name.txt", "_", col_names = F)
 colnames(x) = c("1", "2", "Date", "Run")
 
+Run = x$Run
 rundate = mdy(x$Date)
 instrument_model= " "
 seq_platform="ILLUMINA"
@@ -38,6 +39,7 @@ if(x$`2`[1]== "NB552483"){
 
 a = data.frame(barcodes,
                rundate,
+               Run,
                experiment_name,
                samplesheet_id,
                instrument_model,
@@ -45,12 +47,13 @@ a = data.frame(barcodes,
 
 colnames(a) = c("entity:sample_id",
                 "Date_of_run",
+                "Run",
                 "experiment_name",
                 "samplesheet_id",
                 "instrument_model",
                 "seq_platform")
 
 write_tsv(as.data.frame(a),
-          "upload_sheet_bsf-fb.tsv",
+          "upload_sheet_COVID.tsv",
           eol = "\n")
 View(a)

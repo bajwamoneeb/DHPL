@@ -1,8 +1,9 @@
 library(data.table)
 library(readr)
-Terra <- read_tsv("flu (6).tsv")
+library(writexl)
+Terra <- read_tsv("sample(72).tsv")
 Terra1 <- Filter(function(x)!all(is.na(x)), Terra) 
-Terra2=Terra1[!grepl("gs://|quay", Terra1)]
+Terra2=Terra1[!grepl("gs://|quay|docker", Terra1)]
 View(Terra2)
-write_tsv(Terra2, "flu(6)clean.tsv")
+write_xlsx(Terra2, "clearlabs-01-04.xlsx")
 
